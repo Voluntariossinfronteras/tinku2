@@ -14,23 +14,20 @@ import appStyle from '../statics/styles/appStyle';
 
 
 export default class MusicGameScreen extends Component {
-
 	constructor(props) {
 		super(props);
-		this.instruments = props.config.instruments;
-		this.dropZones = [];
+		this.state = {
+			instruments: props.config.instruments,
+			dropZones: [],
+			instrumentsPosition: {}
+		}
 	}
-
 	static navigatorStyle = {
 		navBarHidden: true
 	};
-
-
-
 	setDropZoneValues(event) {
-		this.dropZones.push(event.nativeEvent.layout);
+		this.state.dropZones.push(Object.assign({},event.nativeEvent.layout,{}));
 	}
-
 	render() {
 		// let whoosh = new Sound('cumbia.wav', Sound.MAIN_BUNDLE, (error) => {
 		// 	if (error) {
@@ -51,22 +48,23 @@ export default class MusicGameScreen extends Component {
 		// 	}
 		// });
 		return (
-			<ImageBackground style={styles.backgroudLevel} source={this.props.config.background}>
-				<Image style={styles.title} source={this.props.config.title}></Image>
-				<View style={styles.containerDropInstruments}>
+			<Image style={styles.backgroudLevel} source={this.props.config.background}>
+				<Text style={styles.title}>
+					{this.props.config.name.toUpperCase()}
+				</Text>
+				<View style={styles.containerDropInstruments} >
 					<View onLayout={this.setDropZoneValues.bind(this)} style={styles.dropZone}></View>
 					<View onLayout={this.setDropZoneValues.bind(this)} style={styles.dropZone}></View>
 					<View onLayout={this.setDropZoneValues.bind(this)} style={styles.dropZone}></View>
 				</View>
-				<View style={styles.containerImagesIntruments}>
+				<View style={styles.containerImagesIntruments} >
 					{
-						this.instruments
-							.map((instrument) => {
-								return <Draggable key={instrument.name} dropzones={this.dropZones} instrument={instrument}></Draggable>
-							})
+						this.state.instruments.map(instrument => {
+							return <Draggable key={instrument.name} dropzones={this.state.dropZones} instrument={instrument}></Draggable>
+						})
 					}
 				</View>
-			</ImageBackground>
+			</Image>
 		);
 	}
 }

@@ -1,3 +1,4 @@
+import responsive from './Stylesheet';
 export default {
 	container: {
 		flex: 1,
@@ -10,10 +11,14 @@ export default {
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
+		flex: 1,
+		justifyContent: 'space-between',
+		flexDirection: 'column'
 	},
 	title: {
-		height: 60,
-		width: 300,
+		fontFamily: 'Dosis-Bold',
+		color: '#724212',
+		fontSize: responsive.FONT_SIZE_TITLE,
 	},
 	label: {
 		fontFamily: 'Dosis-Bold',
@@ -27,6 +32,7 @@ export default {
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginTop: 100,		
+		// flexWrap:'wrap'
 	},
 	dropZone: {
 		borderRadius: 110,
@@ -34,16 +40,29 @@ export default {
 		borderStyle: 'dashed',
 		borderColor: '#724212',
 		backgroundColor: '#ffffff',
-		height: 220,
-		width: 220,
-		margin: 15,
+		height: responsive.HEIGHT(220),
+		width: responsive.WIDTH(220),
+		margin: 15
 	},
 	containerImagesIntruments: {
 		flex: 1,
 		flexDirection: 'row',
-		width: '60%',
+		width: '70%',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginTop: 100,		
+	},
+	instrument: {
+		// marginLeft: 25,
+		// marginRight: 25,
+		height: responsive.HEIGHT(120),
+		width: responsive.WIDTH(120),
+	},
+	descriptionInstrument: {
+		fontFamily: 'Dosis-Bold',
+		color: '#724212',
+		fontSize: responsive.FONT_SIZE,
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginTop: 200,		
 	}
 };

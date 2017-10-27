@@ -12,10 +12,15 @@ import {
   Text,
   View
 } from 'react-native';
+import Orientation from 'react-native-orientation';
 import MusicGameScreen from "../components/MusicGameScreen";
 import appStyle from '../statics/styles/appStyle'; 
 
 export default class App extends Component<{}> {
+
+  componentDidMount() {
+    Orientation.lockToLandscape();
+  }
   render() {
     const config = {
       name: 'Cumbia',

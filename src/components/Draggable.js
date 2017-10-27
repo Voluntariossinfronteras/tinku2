@@ -7,6 +7,7 @@ import {
 	PanResponder,
 	Animated
 } from 'react-native';
+import appStyle from '../statics/styles/appStyle';
 
 export default class Draggable extends Component {
 	constructor(props) {
@@ -14,7 +15,9 @@ export default class Draggable extends Component {
 		this.state = {
 			showDraggable: true,
 			dropZoneValues: null,
-			pan: new Animated.ValueXY()
+			pan: new Animated.ValueXY(),
+			initial: new Animated.ValueXY(),
+			position:null
 		};
 		this.panResponder = PanResponder.create({
 			onStartShouldSetPanResponder: () => true,
@@ -23,47 +26,36 @@ export default class Draggable extends Component {
 				dy: this.state.pan.y
 			}]),
 			onPanResponderRelease: (e, gesture) => {
-				if (this.isDropZone(gesture)) {
-					console.warn(this.state.pan.x);
-				} else {
-					console.warn('false');
-					// Animated.spring(
-					// 	this.state.pan,
-					// 	{ toValue: { x: this.state.initial.x, y: this.state.initial.x } }
-					// ).start();
+				if(this.isDropZone(e,gesture)){ //Step 1
+					this.setState({
+						showDraggable : false //Step 3
+					});
+				}else{
+					Animated.spring(
+						this.state.pan,
+						{toValue:{x:0,y:0}}
+					).start();
 				}
 			}
 		});
 	}
-
-	isDropZone(gesture) {
-		for (let dz of this.props.dropzones) {
-			return this.props.instrument.valid;
-		}
+	isDropZone(e,gesture){     //Step 2
+		console.log((gesture.y0-gesture.moveY)+(this.state.position.y))
+		console.log(this.props.dropzones[0])
+		let isDropZones = this.props.dropzones.map(dz=>{
+			return (this.state.position.y > dz.y && this.state.position.y < dz.y + dz.height) && (this.state.position.x > dz.x && this.state.position.x < dz.x + dz.width);
+		});
+		let isDropeable = isDropZones.reduce((_old,_new)=>{return _old || _new});
+		return isDropeable && this.props.instrument.valid;
 	}
-
 	render() {
 		return (
-			<Animated.View
+			<Animated.View onLayout={(e)=>{this.setState({position:e.nativeEvent.layout})}}
 				{...this.panResponder.panHandlers}
 				style={[this.state.pan.getLayout()]}>
-				<Image style={styles.instrument} source={this.props.instrument.img} />
-				<Text style={styles.descriptionInstrument}>{this.props.instrument.name}</Text>
+				<Image style={appStyle.instrument} source={this.props.instrument.img} />
+				<Text style={appStyle.descriptionInstrument}>{this.props.instrument.name}</Text>
 			</Animated.View>
 		);
 	}
 }
-
-let styles = StyleSheet.create({
-	instrument: {
-		marginLeft: 25,
-		marginRight: 25,
-	},
-	descriptionInstrument: {
-		fontFamily: 'Dosis-Bold',
-		color: '#724212',
-		fontSize: 35,
-		justifyContent: 'center',
-		alignItems: 'center',
-	}
-});
